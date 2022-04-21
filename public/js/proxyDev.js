@@ -1,103 +1,8 @@
 (function () {
   'use strict';
 
-  const BASE_URL = 'https://private-4d06fb-magnit1.apiary-mock.com/';
-
-  function processResponse(response) {
-    return response.json();
-  }
-
-  function fetchRequest(url) {
-    return fetch(url)
-      .then(processResponse);
-  }
-
-  function requestOverviewData(dashboard) {
-    const url = `${BASE_URL}${dashboard}/overview`;
-    return fetchRequest(url);
-  }
-
-  function requestIndicatorData(dashboard) {
-    const url = `${BASE_URL}${dashboard}/indicators`;
-    return fetchRequest(url);
-  }
-
-  function requestIndicatorFactorsData(dashboard) {
-    const url = `${BASE_URL}${dashboard}/factors`;
-    return fetchRequest(url);
-  }
-
-  function requestIndicatorComparisonssData(dashboard) {
-    const url = `${BASE_URL}${dashboard}/comparisons`;
-    return fetchRequest(url);
-  }
-
-  function requestExportData(dashboard) {
-    const url = `${BASE_URL}${dashboard}/export`;
-    return fetchRequest(url);
-  }
-
-  function requestData(request) {
-    if (request.detail) {
-      if (request.detail === 'comparisons') return requestIndicatorComparisonssData(request.dashboard);
-      return requestIndicatorFactorsData(request.dashboard);
-    } else if (request.indicator) {
-      if (request.indicator === 'export') return requestExportData(request.dashboard);
-      return requestIndicatorData(request.dashboard);
-    }
-    return requestOverviewData(request.dashboard);
-  }
-
-  function requestMeta() {
-    const url = `${BASE_URL}/meta`;
-    return fetchRequest(url);
-  }
-
-  function requestExport() {
-    const url = `${BASE_URL}/export`;
-    return fetchRequest(url);
-  }
-
-  function requestTemplateAdd() {
-    const url = `${BASE_URL}/meta/templates/add`;
-    return fetchRequest(url);
-  }
-
-  function requestTemplateRemove() {
-    const url = `${BASE_URL}/meta/templates/remove`;
-    return fetchRequest(url);
-  }
-
-  function requestTemplateApply() {
-    const url = `${BASE_URL}/meta/templates/apply`;
-    return fetchRequest(url);
-  }
-
-  function processDataRequest({ detail }) {
-    return requestData(detail);
-  }
-
-  function processMetaRequest({ detail }) {
-    return requestMeta();
-  }
-
-  function processExportRequest({ detail }) {
-    return requestExport();
-  }
-
-  function processTemplateActionRequest({ detail }) {
-    if (detail.action === 'remove') return requestTemplateRemove();
-    else if (detail.action === 'add') return requestTemplateAdd();
-    return requestTemplateApply();
-  }
-
   function dispatchResponseEvent(data, name) {
     const event = new CustomEvent(name, { detail: data });
-    window.dispatchEvent(event);
-  }
-
-  function dispatchErrorEvent(error) {
-    const event = new CustomEvent('error', { detail: error });
     window.dispatchEvent(event);
   }
 
@@ -126,34 +31,21 @@
     sendResponse(data, 'templateactionresponse');
   }
 
-  function sendError(error) {
-    dispatchErrorEvent(error);
-    console.error(error);
-  }
-
   function onDataRequest(event) {
-    processDataRequest(event)
-      .then(sendDataResponse)
-      .catch(sendError);
+    sendDataResponse(event);
   }
 
   function onMetaRequest(event) {
     console.log("ERROR", event);
-    processMetaRequest(event)
-      .then(sendMetaResponse)
-      .catch(sendError);
+    sendMetaResponse(event);
   }
 
   function onExportRequest(event) {
-    processExportRequest(event)
-      .then(sendExportResponse)
-      .catch(sendError);
+    sendExportResponse(event);
   }
 
   function onTemplateActionRequest() {
-    processTemplateActionRequest(event)
-      .then(sendTemplateAtionResponse)
-      .catch(sendError);
+    sendTemplateAtionResponse(event);
   }
 
   async function processEventRequest({ detail }) {

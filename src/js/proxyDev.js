@@ -1,4 +1,4 @@
-const BASE_URL = 'https://private-4d06fb-magnit1.apiary-mock.com/';
+const BASE_URL = 'https://example.com/';
 
 function processResponse(response) {
   return response.json();
@@ -129,28 +129,20 @@ function sendError(error) {
 }
 
 function onDataRequest(event) {
-  processDataRequest(event)
-    .then(sendDataResponse)
-    .catch(sendError);
+  sendDataResponse(event)
 }
 
 function onMetaRequest(event) {
   console.log("ERROR", event)
-  processMetaRequest(event)
-    .then(sendMetaResponse)
-    .catch(sendError);
+  sendMetaResponse(event)
 }
 
 function onExportRequest(event) {
-  processExportRequest(event)
-    .then(sendExportResponse)
-    .catch(sendError);
+  sendExportResponse(event)
 }
 
 function onTemplateActionRequest() {
-  processTemplateActionRequest(event)
-    .then(sendTemplateAtionResponse)
-    .catch(sendError);
+  sendTemplateAtionResponse(event)
 }
 
 async function processEventRequest({ detail }) {
