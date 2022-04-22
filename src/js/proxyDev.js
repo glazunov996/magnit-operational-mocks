@@ -1,11 +1,15 @@
-const BASE_URL = 'https://example.com/';
+const BASE_URL = '';
 
 function processResponse(response) {
-  return response.json();
+  return {};
+}
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
 }
 
 function fetchRequest(url) {
-  return fetch(url)
+  return delay(1000)
     .then(processResponse);
 }
 
@@ -129,20 +133,28 @@ function sendError(error) {
 }
 
 function onDataRequest(event) {
-  sendDataResponse(event)
+  processDataRequest(event)
+    .then(sendDataResponse)
+    .catch(sendError);
 }
 
 function onMetaRequest(event) {
   console.log("ERROR", event)
-  sendMetaResponse(event)
+  processMetaRequest(event)
+    .then(sendMetaResponse)
+    .catch(sendError);
 }
 
 function onExportRequest(event) {
-  sendExportResponse(event)
+  processExportRequest(event)
+    .then(sendExportResponse)
+    .catch(sendError);
 }
 
 function onTemplateActionRequest() {
-  sendTemplateAtionResponse(event)
+  processTemplateActionRequest(event)
+    .then(sendTemplateAtionResponse)
+    .catch(sendError);
 }
 
 async function processEventRequest({ detail }) {
