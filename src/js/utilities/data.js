@@ -5,7 +5,6 @@ function resetRequest() {
 }
 
 export function requestUpdate(dashboard, indicator, detail, filters, type, id) {
-  console.log("REQUEST UPDATE")
   const promise = new Promise((resolve, reject) => {
     function onDataResponse(response) {
       window.removeEventListener('dataresponse', onDataResponse);
